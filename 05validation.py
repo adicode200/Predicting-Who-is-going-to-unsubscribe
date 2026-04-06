@@ -3,14 +3,21 @@ import pandas as pd
 import numpy as np
 from sqlalchemy import create_engine
 import urllib.parse
+import os
+from dotenv import load_dotenv
 
 # =============================================================================
 #  0. CONNECTION
 # =============================================================================
+load_dotenv()
+user = os.getenv('DB_USER')
+password = os.getenv('DB_PASSWORD')
+host = os.getenv('DB_HOST')
+port = os.getenv('DB_PORT')
+dbname = os.getenv('DB_NAME')
 
-password   = "Aditya@123"
-safe_pwd   = urllib.parse.quote_plus(password)
-DB_URL     = f"postgresql://postgres:{safe_pwd}@localhost:5432/postgres"
+safe_password = urllib.parse.quote_plus(password)
+DB_URL = f"postgresql://{user}:{safe_password}@{host}:{port}/{dbname}"
 engine     = create_engine(DB_URL)
 
 print("Loading tables — please wait...")
@@ -29,7 +36,7 @@ print(f"  usage_logs      : {usage.shape[0]:,} rows, {usage.shape[1]} columns")
 # =============================================================================
 
 def header(title):
-    print(f"\n{'='*55}")
+    print(f"\n{'='*55}")#printing = 55 times 
     print(f"  {title}")
     print(f"{'='*55}")
 
@@ -42,7 +49,7 @@ def check_nulls(df, name):
     header(f"NULL CHECK — {name}")
     null_counts = df.isnull().sum()
     null_pct    = (df.isnull().mean() * 100).round(2)
-    result      = pd.DataFrame({'null_count': null_counts, 'null_pct': null_pct})
+    result      = pd.DataFrame({'null_count': null_counts, 'null_pct': null_pct})# this is null percentage so that we can see the disaster 10 nulls in 1000000000 is okay but 10 null in 11 is disaster 
     result      = result[result['null_count'] > 0]
 
     if result.empty:
@@ -264,6 +271,7 @@ def final_scorecard(customers, tickets, usage):
     # Print scorecard
     passed = sum(results.values())
     total  = len(results)
+    # print(results)
 
     for check, ok in results.items():
         icon = "PASS" if ok else "FAIL"

@@ -2,11 +2,19 @@ import pandas as pd
 import numpy as np
 from sqlalchemy import create_engine
 import urllib.parse
+from dotenv import load_dotenv  
+import os
 
 # 1. Setup Connection (Using the encoded password logic)
-password = "Aditya@123"
+load_dotenv()
+user = os.getenv('DB_USER')
+password = os.getenv('DB_PASSWORD')
+host = os.getenv('DB_HOST')
+port = os.getenv('DB_PORT')
+dbname = os.getenv('DB_NAME')
+
 safe_password = urllib.parse.quote_plus(password)
-DB_URL = f"postgresql://postgres:{safe_password}@localhost:5432/postgres"
+DB_URL = f"postgresql://{user}:{safe_password}@{host}:{port}/{dbname}"
 engine = create_engine(DB_URL)
 
 def create_support_tickets():
@@ -19,7 +27,7 @@ def create_support_tickets():
     num_tickets = 5000  # Let's create 5000 random complaints
     data = {
         "ticket_id": [f"TKT-{i}" for i in range(1, num_tickets + 1)],
-        "customerID": np.random.choice(customer_ids, num_tickets),
+        "customerID": np.random.choice(customer_ids, num_tickets),# (option,size)
         "category": np.random.choice(["Technical", "Billing", "Outage", "General"], num_tickets),
         "priority": np.random.choice(["Low", "Medium", "High", "Critical"], num_tickets, p=[0.4, 0.3, 0.2, 0.1]),
         "status": np.random.choice(["Resolved", "Closed", "Open", "Pending"], num_tickets),

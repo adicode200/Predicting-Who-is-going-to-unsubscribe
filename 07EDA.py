@@ -1,7 +1,7 @@
 # =============================================================================
 #  PHASE 4 — EXPLORATORY DATA ANALYSIS (EDA)
 #  Churn Prediction Project
-#  Run: python phase4_eda.py
+#  
 #
 #  What this file does:
 #  Loads features.csv built in Phase 3 and produces 8 plots that answer
@@ -59,7 +59,7 @@ print("="*55)
 # Load features built in Phase 3
 df = pd.read_csv("data/features.csv")
 print(f"\n  Loaded features.csv : {df.shape[0]:,} rows, {df.shape[1]} columns")
-print(f"  Churn rate          : {df['churn'].mean():.1%}\n")
+print(f"  Churn rate          : {df['churn'].mean():.1%}\n")    
 
 # Readable label for plots
 df['Churn Label'] = df['churn'].map({0: 'Stayed', 1: 'Churned'})
@@ -462,7 +462,5 @@ print(f"""
      DSL churn rate         : {churn_by_internet_summary.get('DSL', 0):.1f}%
      No internet churn rate : {churn_by_internet_summary.get('No internet', 0):.1f}%
 
-  8 plots saved to plots/ folder
-  Next → python phase5_model.py
 """)
 print("="*55)

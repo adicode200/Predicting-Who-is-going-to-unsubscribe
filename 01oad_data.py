@@ -1,12 +1,20 @@
 import pandas as pd
 from sqlalchemy import create_engine
 import os
-
+import urllib.parse
+from dotenv import load_dotenv  
 # 1. Connection string (Matches the Docker command you ran)
 # postgresql://[user]:[password]@[host]:[port]/[database]
-DB_URL = "postgresql://postgres:Aditya%40123@localhost:5432/postgres"
-engine = create_engine(DB_URL)
+load_dotenv()
+user = os.getenv('DB_USER')
+password = os.getenv('DB_PASSWORD')
+host = os.getenv('DB_HOST')
+port = os.getenv('DB_PORT')
+dbname = os.getenv('DB_NAME')
 
+safe_password = urllib.parse.quote_plus(password)
+DB_URL = f"postgresql://{user}:{safe_password}@{host}:{port}/{dbname}"
+engine = create_engine(DB_URL)
 def upload_data():
     # 2. Locate the file
     file_path = os.path.join("data", "customer_data.csv")

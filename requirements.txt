@@ -1,0 +1,19 @@
+# Database
+sqlalchemy==2.0.36
+psycopg2-binary==2.9.10
+
+# Data
+pandas==2.2.3
+numpy==1.26.4
+
+# Machine Learning
+scikit-learn==1.5.2
+
+# Visualisation
+matplotlib==3.9.2
+seaborn==0.13.2
+
+# Utilities
+joblib==1.4.2
+python-dotenv==1.0.1
+urllib3==2.2.3

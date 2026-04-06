@@ -23,14 +23,19 @@ import numpy as np
 from sqlalchemy import create_engine
 import urllib.parse
 import os
-
+from dotenv import load_dotenv
 # =============================================================================
 #  0. CONNECTION AND RAW DATA LOAD
 # =============================================================================
 
-password = "Aditya@123"
-safe_pwd = urllib.parse.quote_plus(password)
-DB_URL   = f"postgresql://postgres:{safe_pwd}@localhost:5432/postgres"
+load_dotenv()
+user = os.getenv('DB_USER')
+password = os.getenv('DB_PASSWORD')
+host = os.getenv('DB_HOST')
+port = os.getenv('DB_PORT')
+dbname = os.getenv('DB_NAME')
+safe_password = urllib.parse.quote_plus(password)
+DB_URL = f"postgresql://{user}:{safe_password}@{host}:{port}/{dbname}"
 engine   = create_engine(DB_URL)
 
 print("="*55)
@@ -92,6 +97,8 @@ usage_pivot['login_drop_pct'] = (
 # Average logins across all 3 months — overall engagement level
 usage_pivot['avg_monthly_logins'] = (
     usage_pivot[['login_jan', 'login_feb', 'login_mar']].mean(axis=1).round(2)
+    # axis = 1 tells be in the row of one customer then calc the avg 
+    # axis = 0 tells to calc the avg of one company in jan or feb or mar 
 )
 
 # Feature 3: avg_data_gb
@@ -109,10 +116,10 @@ def compute_slope(row):
     if any(pd.isna(y)):
         return np.nan
     x = [0, 1, 2]   # Jan=0, Feb=1, Mar=2
-    slope, _ = np.polyfit(x, y, 1)
+    slope, _ = np.polyfit(x, y, 1)# linear regression , 1 means straight line 
     return round(slope, 3)
 
-usage_pivot['login_trend_slope'] = usage_pivot.apply(compute_slope, axis=1)
+usage_pivot['login_trend_slope'] = usage_pivot.apply(compute_slope, axis=1)# apply is passing each row in the function 
 
 # Keep only the engineered features (drop raw monthly columns)
 usage_features = usage_pivot[[
@@ -139,6 +146,8 @@ ticket_features = (
     tickets
     .groupby('customerID')
     .agg(
+        #  mutiple new column in ticket_features
+        # New_Column_Name = ('Original_Column', 'Math_to_do')
         total_tickets     = ('ticket_id', 'count'),
         high_priority_cnt = ('priority',  lambda x: x.isin(['High','Critical']).sum()),
         unresolved_cnt    = ('status',    lambda x: x.isin(['Open','Pending']).sum()),
