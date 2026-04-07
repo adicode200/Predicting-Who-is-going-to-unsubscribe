@@ -1,8 +1,6 @@
 # =============================================================================
 #  PHASE 6 — MODEL EVALUATION AND INTERPRETATION (LOGISTIC REGRESSION)
-#  Churn Prediction Project
-#  Run: python phase6_evaluation.py
-#
+#  Churn Prediction Project#
 #  What this file does:
 #  1. Loads lr_model.pkl saved by Phase 5
 #  2. Confusion matrix with business cost framing
@@ -11,7 +9,6 @@
 #  5. Coefficient plot — replaces SHAP, explains model in plain English
 #  6. Final business summary report
 #
-#  No new installs needed — uses scikit-learn and matplotlib only
 # =============================================================================
 
 import pandas as pd
@@ -116,9 +113,9 @@ print(f"  Recall          : {metrics['recall']:.4f}  "
 
 header("1. CONFUSION MATRIX WITH BUSINESS COST")
 
-REVENUE_MONTHLY  = 65
-OFFER_COST       = 20
-MONTHS_SAVED     = 6
+REVENUE_MONTHLY  = 65#Each customer pays ₹65 per month.
+OFFER_COST       = 20#If the AI says a customer is leaving, you spend ₹20 (e.g., a discount coupon) to make them stay.
+MONTHS_SAVED     = 6#We assume that if we catch a churner and give them a discount, they will stay for at least 6 more months.
 
 value_tp  = TP * (REVENUE_MONTHLY * MONTHS_SAVED - OFFER_COST)
 cost_fp   = FP * OFFER_COST
@@ -203,7 +200,13 @@ print(f"""
 #
 #  A good model hugs the top-left corner.
 # =============================================================================
-
+# /////////////////////////////////////////
+# /////////////////////////////////
+#
+# Imagine your AI model doesn't just say "Churn" or "Stay." It gives a probability, like: "Aditya has an 82% chance of leaving."
+# If you set your threshold at 90%, you only catch the most obvious leavers (Low False Positives, but Low Catch Rate).
+# If you set your threshold at 10%, you catch every single leaver, but you also flag almost everyone who is staying (High Catch Rate, but High False Alarms).
+# The ROC Curve plots every single possible threshold from 0% to 100% to see how the model behaves.
 header("2. ROC-AUC CURVE")
 
 fpr, tpr, roc_thresholds = roc_curve(y_test, y_prob)
@@ -219,7 +222,8 @@ ax.plot([0, 1], [0, 1], color=C_GRAY, linewidth=1.2,
 
 # Mark the point closest to top-left corner (best threshold on ROC)
 distances      = np.sqrt(fpr**2 + (1 - tpr)**2)
-best_roc_idx   = np.argmin(distances)
+# /distance is an aray 
+best_roc_idx   = np.argmin(distances) # it returns the pos of smallest diatance 
 best_roc_fpr   = fpr[best_roc_idx]
 best_roc_tpr   = tpr[best_roc_idx]
 best_roc_thresh= roc_thresholds[best_roc_idx]

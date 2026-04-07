@@ -96,6 +96,8 @@ for i, col in enumerate(FEATURE_COLS, 1):
 #  This held-out set gives us an honest estimate of real-world performance.
 #
 #  Why stratify=y?
+# When you see stratify=y in your Python code, you are telling the computer:
+# "Look at the y column (the churners). When you split the data into Train and Test, make sure both sides still have exactly 27% churners."
 #  Without stratify, the random split might give you 20% churn in train
 #  but 35% churn in test — making evaluation unfair.
 #  stratify=y guarantees both sets have the same churn ratio (~27%).
@@ -107,6 +109,7 @@ X_train, X_test, y_train, y_test = train_test_split(
     X, y,
     test_size    = 0.2,
     random_state = 42,
+    # random state => test and train data will be different always when I press run so always differnet result so we set the random state 42 is a random number .
     stratify     = y
 )
 
@@ -135,12 +138,18 @@ print(f"\n  Both sets have the same churn ratio — stratify worked correctly.")
 # =============================================================================
 
 header("3. BUILDING THE PIPELINE")
-
+# StandardScaler converts every column so they all have a Mean of 0 and a Standard Deviation of 1. Now, every feature speaks the same "language."
+# B. C=1.0 (The "Strictness" Filter)
+# This is called Regularization.
+# High C (e.g., 100): The model is very "Loose." it tries to fit every single data point perfectly (Danger: Overfitting).
+# Low C (e.g., 0.01): The model is very "Strict." It ignores small details to find the big, simple patterns.
+# C=1.0 is the "Goldilocks" zone—not too strict, not too loose.
 pipeline = Pipeline([
     ('scaler', StandardScaler()),
     ('model',  LogisticRegression(
         class_weight = 'balanced',
         C            = 1.0,
+        
         max_iter     = 1000,
         random_state = 42,
         solver       = 'lbfgs'
@@ -245,6 +254,7 @@ cv_results = cross_validate(
     cv      = cv,
     scoring = ['roc_auc', 'f1', 'precision', 'recall'],
     n_jobs  = -1
+    # n_jobs = -1 tells Python: "Use all the CPU cores in my laptop at the same time."
 )
 
 print(f"\n  {'Metric':<12}  {'Mean':>7}  {'Std':>7}  {'All 5 folds'}")
@@ -278,7 +288,23 @@ print(f"""
 #  exp(-1.2) = 0.30 → a one-unit increase in contract (e.g. month-to-month
 #  to one-year) multiplies churn odds by 0.30 — a 70% reduction in odds.
 # =============================================================================
+# ===========================================================
+# This is the "Why" of your model. While other AI models (like Random Forest) are "Black Boxes" that just give you an answer, Logistic Regression is an "Open Book." It tells you exactly how much every feature—like tenure or monthly charges—influences a customer's decision to leave.
 
+# 1. The Coefficient (The "Weight")
+# Every feature in your model gets assigned a number called a Coefficient. Think of it as a "Vote" for or against Churn.
+# Positive Coefficient (+): These are Risk Factors. As this number goes up, the chance of Churn goes up.
+# Example: If total_tickets has a positive coefficient, it means more complaints = more churn.
+# Negative Coefficient (-): These are Protective Factors. As this number goes up, the chance of Churn goes down.
+# Example: If tenure has a negative coefficient, it means more months of loyalty = less churn.
+
+# ///////////////////////////////////
+# /////////////////////////
+# Imagine your contract_encoded has a coefficient of -1.2.The Math: e^{-1.2} approx 0.30.The Interpretation: Moving from "Month-to-Month" to "One-Year" multiplies the "Odds of Churning" by 0.30.
+# The Result: Since 0.30 is 70% less than 1.0, you can tell your manager: "If we can move a customer to a one-year contract, we reduce their risk of leaving by 70%!"
+# ///////////////////////////
+# ///////////////////////////////////
+# ===========================================================
 header("7. COEFFICIENT ANALYSIS — WHY THE MODEL DECIDES")
 
 lr_model     = pipeline.named_steps['model']
@@ -398,8 +424,6 @@ print(f"""
   Saved → models/lr_model.pkl
   Contains: pipeline, feature list, test data,
             predictions, coefficients, all metrics
-
-  Next → python phase6_evaluation.py
 """)
 
 print("="*60)

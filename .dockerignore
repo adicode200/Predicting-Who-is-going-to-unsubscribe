@@ -1,0 +1,34 @@
+# =============================================================================
+#  .dockerignore — files NOT copied into Docker image
+# =============================================================================
+
+# Environment variables — never in image
+.env
+
+# Git
+.git
+.gitignore
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+notebooks/
+
+# VS Code
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Source scripts — not needed to run the app
+src/
+
+# Large files already mounted as volumes
+# data/
+# models/

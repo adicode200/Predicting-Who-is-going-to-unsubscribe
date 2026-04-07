@@ -1,3 +1,10 @@
+# =============================================================================
+#  requirements.txt — Churn Prediction Dashboard
+# =============================================================================
+
+# Web framework
+streamlit==1.35.0
+
 # Database
 sqlalchemy==2.0.36
 psycopg2-binary==2.9.10
@@ -6,7 +13,7 @@ psycopg2-binary==2.9.10
 pandas==2.2.3
 numpy==1.26.4
 
-# Machine Learning
+# Machine learning
 scikit-learn==1.5.2
 
 # Visualisation

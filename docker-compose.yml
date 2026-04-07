@@ -1,0 +1,45 @@
+# =============================================================================
+#  docker-compose.yml — Churn Prediction Dashboard
+#  Run: docker-compose up --build
+#  Stop: docker-compose down
+# =============================================================================
+
+version: '3.8'
+
+services:
+
+  # ── Streamlit Dashboard ───────────────────────────────────────────────────
+  dashboard:
+    build: .
+    container_name: churn_dashboard
+    ports:
+      - "8501:8501"          # localhost:8501 → container:8501
+    volumes:
+      - ./data:/app/data         # live reload data folder
+      - ./models:/app/models     # live reload models folder
+      - ./plots:/app/plots       # live reload plots folder
+      - ./reports:/app/reports   # live reload reports folder
+    env_file:
+      - .env                     # loads DB_USER, DB_PASSWORD etc.
+    environment:
+      - STREAMLIT_SERVER_HEADLESS=true
+      - STREAMLIT_SERVER_PORT=8501
+      - STREAMLIT_SERVER_ADDRESS=0.0.0.0
+    restart: unless-stopped
+
+  # ── PostgreSQL Database ───────────────────────────────────────────────────
+  postgres:
+    image: postgres:15-alpine    # lightweight postgres image
+    container_name: churn_postgres
+    environment:
+      POSTGRES_USER:     ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB:       ${DB_NAME}
+    ports:
+      - "5432:5432"              # same port as your local postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data   # persist data across restarts
+    restart: unless-stopped
+
+volumes:
+  postgres_data:                 # named volume — survives docker-compose down

@@ -6,7 +6,7 @@
 #  What this file does:
 #  Loads features.csv built in Phase 3 and produces 8 plots that answer
 #  the most important business questions about churn. Every plot is saved
-#  as a PNG in the plots/ folder so you can include them in a presentation.
+#  as a PNG in the plots/ folde r so you can include them in a presentation.
 #
 #  Plots produced:
 #  01_churn_distribution.png       — how imbalanced is the target?
