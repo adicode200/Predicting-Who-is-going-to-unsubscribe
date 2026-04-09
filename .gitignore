@@ -2,10 +2,10 @@
 .env
 
 # Data files
-data/
+# data/
 
 # Trained models
-models/
+# models/
 
 # Generated outputs
 plots/
