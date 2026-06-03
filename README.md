@@ -42,7 +42,7 @@ This system tells them:
 
 That is actionable. A retention offer can be sent today, before the customer cancels.
 
-**Live demo:** [telco-churn-insight.streamlit.app](https://telco-churn-insight.streamlit.app)
+**Live demo:** [telco-churn-insight.streamlit.app](https://predicting-who-is-going-to-unsubscribe-dbr5zbksgvvm6rigmaampd.streamlit.app/)
 
 ---
 
