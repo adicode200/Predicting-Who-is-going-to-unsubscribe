@@ -6,7 +6,6 @@
 
 **An end-to-end AI system that predicts customer churn and explains exactly why**
 
-[![Live Demo](https://predicting-who-is-going-to-unsubscribe-dbr5zbksgvvm6rigmaampd.streamlit.app/)
 [![GitHub](https://img.shields.io/badge/GitHub-adicode200-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/adicode200/Predicting-Who-is-going-to-unsubscribe)
 [![Python](https://img.shields.io/badge/Python-3.11-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-336791?style=for-the-badge&logo=postgresql&logoColor=white)](https://postgresql.org)
